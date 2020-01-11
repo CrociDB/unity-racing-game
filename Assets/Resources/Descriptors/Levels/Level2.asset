@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5411e5a344a4dd6438abe5c05b194f41, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  m_Name: ThereYouGo!
+  m_Name: Two
   m_Difficulty: 1
   m_Scene: SampleScene
   m_TimeByStar:
