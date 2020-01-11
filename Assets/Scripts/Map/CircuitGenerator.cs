@@ -9,14 +9,12 @@ using UnityEditor;
 
 public class CircuitGenerator : MonoBehaviour
 {
-    private MeshFilter m_CircuitMesh;
-
-    private void Awake() 
-    {
-        m_CircuitMesh = GetComponent<MeshFilter>();    
-    }
-    
 #if UNITY_EDITOR
+    [Range(1, 200)]
+    public int m_SplineResolution = 1;
+    public float m_Width = 12f;
+    private MeshFilter m_CircuitMesh;
+    
     public void Generate()
     {
         if (m_CircuitMesh == null)
@@ -28,9 +26,7 @@ public class CircuitGenerator : MonoBehaviour
 
     private Mesh DrawMesh()
      {
-        var points = transform.Cast<Transform>().ToList();
-
-        var width = 8.0f;
+        var points = transform.Cast<Transform>().Select(t => t.position).ToList();
 
         Mesh mesh = m_CircuitMesh.sharedMesh;
         if (mesh == null) mesh = new Mesh();
@@ -42,35 +38,61 @@ public class CircuitGenerator : MonoBehaviour
         var uv = new List<Vector2>();
         var triangles = new List<int>();
 
-        Transform lastPoint = points[points.Count - 1];
-        Vector3 lastLeft = Vector3.Cross((points[0].position - lastPoint.position).normalized, Vector3.up);;
+        var lastPoint = points[points.Count - 1];
+        var currentPoint = points[0];
+        var nextPoint = points[1 % points.Count];
+        var nextNextPoint = points[2 % points.Count];
+
+        Vector3 lastPos = GetCatmullRomPosition(1.0f / (float)m_SplineResolution * (float)(m_SplineResolution - 2),
+                    points[points.Count - 2],
+                    lastPoint,
+                    currentPoint,
+                    nextPoint);
+        
+        Vector3 lastLeft = Vector3.Cross((points[0] - lastPoint).normalized, Vector3.up);
         int count = 0;
-        foreach (var pos in points)
+
+        for (int j = 0; j < points.Count; j++)
         {
-            var left = Vector3.Cross((pos.position - lastPoint.position).normalized, Vector3.up);
+            currentPoint = points[j];
+            nextPoint = points[(j + 1) % points.Count];
+            nextNextPoint = points[(j + 2) % points.Count];
 
-            vertices.Add(lastPoint.position + lastLeft * width);
-            vertices.Add(lastPoint.position - lastLeft * width);
-            vertices.Add(pos.position + left * width);
-            vertices.Add(pos.position - left * width);
+            for (int i = 0; i < m_SplineResolution; i++)
+            {
+                var pos = GetCatmullRomPosition(1.0f / (float)m_SplineResolution * (float)i,
+                    lastPoint,
+                    currentPoint,
+                    nextPoint,
+                    nextNextPoint);
 
-            normals.Add(-Vector3.up);
-            normals.Add(-Vector3.up);
-            normals.Add(-Vector3.up);
-            normals.Add(-Vector3.up);
+                var left = Vector3.Cross((pos - lastPos).normalized, Vector3.up);
 
-            uv.Add(new Vector3(0.0f, 0.0f));
-            uv.Add(new Vector3(1.0f, 0.0f));
-            uv.Add(new Vector3(0.0f, 1.0f));
-            uv.Add(new Vector3(1.0f, 1.0f));
+                vertices.Add(lastPos + lastLeft * m_Width);
+                vertices.Add(lastPos - lastLeft * m_Width);
+                vertices.Add(pos + left * m_Width);
+                vertices.Add(pos - left * m_Width);
 
-            triangles.AddRange(new int[]{ 
-                count,      count + 2,  count + 1,
-                count + 2,  count + 3,  count + 1  });
+                normals.Add(-Vector3.up);
+                normals.Add(-Vector3.up);
+                normals.Add(-Vector3.up);
+                normals.Add(-Vector3.up);
 
-            count += 4;
-            lastPoint = pos;
-            lastLeft = left;
+                uv.Add(new Vector3(0.0f, 0.0f));
+                uv.Add(new Vector3(1.0f, 0.0f));
+                uv.Add(new Vector3(0.0f, 1.0f));
+                uv.Add(new Vector3(1.0f, 1.0f));
+
+                triangles.AddRange(new int[]{ 
+                    count,      count + 2,  count + 1,
+                    count + 2,  count + 3,  count + 1  });
+
+                count += 4;
+                lastPos = pos;
+                lastLeft = left;
+            }
+
+            lastPoint = currentPoint;
         }
 
         Debug.Log(vertices.Count);
@@ -86,25 +108,49 @@ public class CircuitGenerator : MonoBehaviour
         return mesh;
      }
 
+    Vector3 GetCatmullRomPosition(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+	{
+		Vector3 a = 2f * p1;
+		Vector3 b = p2 - p0;
+		Vector3 c = 2f * p0 - 5f * p1 + 4f * p2 - p3;
+		Vector3 d = -p0 + 3f * p1 - 3f * p2 + p3;
+
+		Vector3 pos = 0.5f * (a + (b * t) + (c * t * t) + (d * t * t * t));
+
+		return pos;
+	}
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
 
-        Vector3 last = Vector3.zero;
-        int c = 0;
-        foreach (Transform pos in transform)
+        var pointList = transform.Cast<Transform>().Select(t => t.position).ToList();
+        
+        var lastPoint = pointList.Last();
+        var currentPoint = pointList[0];
+        var nextPoint = pointList[1 % pointList.Count];
+        var nextNextPoint = pointList[2 % pointList.Count];
+
+        Vector3 lastPos = GetCatmullRomPosition(1.0f / (float)m_SplineResolution * (float)(m_SplineResolution - 1), pointList[pointList.Count - 2], lastPoint, currentPoint, nextPoint);
+
+        for (int j = 0; j < pointList.Count; j++)
         {
-            if (c++ != 0)
+            currentPoint = pointList[j];
+            nextPoint = pointList[(j + 1) % pointList.Count];
+            nextNextPoint = pointList[(j + 2) % pointList.Count];
+
+            for (int i = 0; i < m_SplineResolution; i++)
             {
-                Gizmos.DrawLine(last, pos.position);
+                var pos = GetCatmullRomPosition(1.0f / (float)m_SplineResolution * (float)i, lastPoint, currentPoint, nextPoint, nextNextPoint);
+                Gizmos.DrawLine(lastPos, pos);
+                Gizmos.DrawSphere(pos, 0.7f);
+                lastPos = pos;
             }
 
-            last = pos.position;
+            lastPoint = currentPoint;
+    
+            Gizmos.DrawSphere(currentPoint, 2.0f);
         }
-
-        Gizmos.DrawLine(last, transform.GetChild(0).position);
-
     }
 #endif
 }
