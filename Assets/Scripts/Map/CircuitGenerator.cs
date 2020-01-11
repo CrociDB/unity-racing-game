@@ -13,6 +13,7 @@ public class CircuitGenerator : MonoBehaviour
     [Range(1, 200)]
     public int m_SplineResolution = 1;
     public float m_Width = 12f;
+    public float m_Height = 20f;
     private MeshFilter m_CircuitMesh;
     
     public void Generate()
@@ -66,8 +67,11 @@ public class CircuitGenerator : MonoBehaviour
                     nextPoint,
                     nextNextPoint);
 
-                var left = Vector3.Cross((pos - lastPos).normalized, Vector3.up);
+                var forward = (pos - lastPos).normalized;
+                var left = Vector3.Cross(forward, Vector3.up);
+                var top = Vector3.Cross(left, forward);
 
+                // the lane
                 vertices.Add(lastPos + lastLeft * m_Width);
                 vertices.Add(lastPos - lastLeft * m_Width);
                 vertices.Add(pos + left * m_Width);
@@ -79,15 +83,60 @@ public class CircuitGenerator : MonoBehaviour
                 normals.Add(-Vector3.up);
 
                 uv.Add(new Vector3(0.0f, 0.0f));
-                uv.Add(new Vector3(1.0f, 0.0f));
-                uv.Add(new Vector3(0.0f, 1.0f));
-                uv.Add(new Vector3(1.0f, 1.0f));
+                uv.Add(new Vector3(0.5f, 0.0f));
+                uv.Add(new Vector3(0.0f, 0.5f));
+                uv.Add(new Vector3(0.5f, 0.5f));
 
                 triangles.AddRange(new int[]{ 
-                    count,      count + 2,  count + 1,
-                    count + 2,  count + 3,  count + 1  });
+                        count,      count + 2,  count + 1,
+                        count + 2,  count + 3,  count + 1  });
 
                 count += 4;
+
+                // right side
+                vertices.Add(lastPos - lastLeft * m_Width);
+                vertices.Add(lastPos - lastLeft * m_Width - top * m_Height);
+                vertices.Add(pos - left * m_Width);
+                vertices.Add(pos - left * m_Width - top * m_Height);
+
+                normals.Add(lastLeft);
+                normals.Add(lastLeft);
+                normals.Add(left);
+                normals.Add(left);
+
+                uv.Add(new Vector3(0.5f, 0.5f));
+                uv.Add(new Vector3(0.5f, 0.0f));
+                uv.Add(new Vector3(1.0f, 0.5f));
+                uv.Add(new Vector3(1.0f, 0.0f));
+
+                triangles.AddRange(new int[]{ 
+                        count,      count + 2,  count + 1,
+                        count + 2,  count + 3,  count + 1  });
+
+                count += 4;
+
+                // left side
+                vertices.Add(lastPos + lastLeft * m_Width);
+                vertices.Add(lastPos + lastLeft * m_Width - top * m_Height);
+                vertices.Add(pos + left * m_Width);
+                vertices.Add(pos + left * m_Width - top * m_Height);
+
+                normals.Add(-lastLeft);
+                normals.Add(-lastLeft);
+                normals.Add(-left);
+                normals.Add(-left);
+
+                uv.Add(new Vector3(0.5f, 0.5f));
+                uv.Add(new Vector3(0.5f, 0.0f));
+                uv.Add(new Vector3(1.0f, 0.5f));
+                uv.Add(new Vector3(1.0f, 0.0f));
+
+                triangles.AddRange(new int[]{ 
+                    count,      count + 1,  count + 2,
+                    count + 1,  count + 3,  count + 2  });
+
+                count += 4;
+                
                 lastPos = pos;
                 lastLeft = left;
             }
