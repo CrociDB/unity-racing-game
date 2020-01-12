@@ -26,15 +26,65 @@ namespace Game.GameManagement
 
         public GameDescriptor m_GameDescriptor;
 
+        private float m_FixedDeltaTime;
+        private bool m_Paused;
+
+        private LevelDescriptor m_CurrentLevel;
+
+        public LevelDescriptor Currentlevel
+        {
+            get
+            {
+                return m_CurrentLevel;
+            }
+        }
+
+        public bool Paused
+        {
+            get
+            {
+                return m_Paused;
+            }
+        }
+
         private void Init()
         {
             DontDestroyOnLoad(gameObject);
+            m_FixedDeltaTime = Time.fixedDeltaTime;
             m_GameDescriptor = Resources.Load<GameDescriptor>("Descriptors/GameDescriptor");
         }
 
         public void LoadLevel(LevelDescriptor level)
         {
+            m_CurrentLevel = level;
+            UnpauseGame();
             SceneManager.LoadScene(level.m_Scene);
+        }
+
+        public void RestartLevel()
+        {
+            LoadLevel(m_CurrentLevel);
+        }
+
+        public void LoadMainMenu()
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        // Time related operations
+        public void PauseGame()
+        {
+            m_Paused = true;
+            Time.timeScale = 0.0f;
+            Time.fixedDeltaTime = 0.0f;
+        }
+
+        public void UnpauseGame()
+        {
+            Input.ResetInputAxes();
+            m_Paused = false;
+            Time.timeScale = 1.0f;
+            Time.fixedDeltaTime = m_FixedDeltaTime;
         }
     }
 }

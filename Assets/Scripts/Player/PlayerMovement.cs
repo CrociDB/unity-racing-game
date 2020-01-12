@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.GameManagement;
 using UnityEngine;
 
 namespace Game.Player
@@ -29,7 +30,9 @@ namespace Game.Player
 
         public void Update()
         {
-            m_Body.AddForce(transform.forward * m_Thrust, ForceMode.Acceleration);
+            if (GameManager.Instance.Paused) return;
+
+            m_Body.AddForce(transform.forward * m_Thrust * Time.deltaTime * 60f, ForceMode.Acceleration);
 
             var velocity = m_Body.velocity;
             var speedNormalized = Mathf.Clamp(velocity.sqrMagnitude / (m_MaxSpeed * m_MaxSpeed), 0.2f, 1.0f);
@@ -42,7 +45,7 @@ namespace Game.Player
                 tm.Emit((int)(Mathf.Min(Mathf.Abs(diff) * 8.0f, 8.0f)));
             }
 
-            transform.Rotate(transform.up * turning * m_RotationSpeed);
+            transform.Rotate(transform.up * turning * m_RotationSpeed * Time.deltaTime * 60f);
             m_Body.AddForce(-velocity * Mathf.Abs(turning), ForceMode.Acceleration);
 
             if (velocity.sqrMagnitude >= m_MaxSpeed * m_MaxSpeed)
