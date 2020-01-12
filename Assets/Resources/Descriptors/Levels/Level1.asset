@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5411e5a344a4dd6438abe5c05b194f41, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  m_Title: Oval
+  m_Title: One
   m_Difficulty: 0
-  m_Scene: SampleScene
+  m_Scene: Level1
   m_Boosts: 3
-  m_TimeLimit: 40
+  m_TimeLimit: 34
   m_TimeByStar: {x: 25, y: 28}

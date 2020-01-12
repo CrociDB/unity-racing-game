@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5411e5a344a4dd6438abe5c05b194f41, type: 3}
   m_Name: Level3
   m_EditorClassIdentifier: 
-  m_Title: Oh Wow
+  m_Title: Slippery
   m_Difficulty: 2
-  m_Scene: SampleScene
-  m_Boosts: 4
-  m_TimeLimit: 0
-  m_TimeByStar: {x: 0, y: 0}
+  m_Scene: Level3
+  m_Boosts: 5
+  m_TimeLimit: 36
+  m_TimeByStar: {x: 24, y: 29}

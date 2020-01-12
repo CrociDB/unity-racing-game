@@ -14,6 +14,8 @@ namespace Game.Player
         public float m_Thrust = 1.0f;
         public float m_RotationSpeed = 4.0f;
         public float m_BoostSpeed = 10.0f;
+        [Range(0.0f, 1.0f)]
+        public float m_Slippery = 0.0f;
 
         private float m_Boost;
 
@@ -54,11 +56,11 @@ namespace Game.Player
             }
 
             transform.Rotate(transform.up * turning * m_RotationSpeed * Time.deltaTime * 60f);
-            m_Body.AddForce(-velocity * Mathf.Abs(turning), ForceMode.Acceleration);
+            m_Body.AddForce(-velocity * Mathf.Abs(turning) * (1.0f - m_Slippery), ForceMode.Acceleration);
 
             if (velocity.sqrMagnitude >= maxSpeed * maxSpeed)
             {
-                m_Body.AddForce(-velocity * .7f, ForceMode.Acceleration);
+                m_Body.AddForce(-velocity * 1.7f, ForceMode.Acceleration);
             }
         }
 
