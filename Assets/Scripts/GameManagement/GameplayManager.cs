@@ -104,17 +104,19 @@ namespace Game.GameManagement
             yield return new WaitForSecondsRealtime(.3f);
             PauseGame();
 
-            GetRaceSummary();
+            var stars = GetRaceStars();
+
+            m_GameplayUI.EndOfGame(stars, m_Time);
         }
 
-        private void GetRaceSummary()
+        private int GetRaceStars()
         {
             var currentLevel = GameManager.Instance.Currentlevel;
             int stars = (m_Time < currentLevel.m_TimeByStar.x ? 
                             3 : 
                             (m_Time < currentLevel.m_TimeByStar.y ? 2 : 1));
 
-            Debug.Log("You got: " + stars);
+            return stars;
         }
     }
 }

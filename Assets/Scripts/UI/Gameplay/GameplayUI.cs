@@ -12,14 +12,21 @@ namespace Game.UI
 {
     public class GameplayUI : MonoBehaviour
     {
+        [Header("Panels")]
         public GameObject m_PauseScreenPanel;
+        public GameObject m_EndGamePanel;
+
+        [Header("HUD")]
         public Text m_Countdown;
         public Text m_Time;
         public Speedometer m_Speedometer;
         public Button m_PauseButton;
-
         public Image m_FlashFX;
-        
+
+        [Header("End Game Panel")]
+        public Image[] m_Stars;
+        public Text m_TimeInfo;
+
         private GameplayManager m_Gameplay;
 
         public void Init(GameplayManager gameplay)
@@ -79,6 +86,8 @@ namespace Game.UI
 
             m_Gameplay.PauseGame();
             m_PauseScreenPanel.SetActive(true);
+            m_PauseScreenPanel.transform.localScale = Vector3.zero;
+            m_PauseScreenPanel.transform.DOScale(Vector3.one, .4f).SetUpdate(true);
         }
 
         public void ExitToMenu()
@@ -113,6 +122,44 @@ namespace Game.UI
             target.a = 0.8f;
             m_FlashFX.DOColor(target, .07f).SetUpdate(true);
             m_FlashFX.DOColor(color, .3f).SetDelay(.075f).SetUpdate(true);
+        }
+
+        public void EndOfGame(int stars, float time)
+        {
+            StartCoroutine(EndOfGameRoutine(stars, time));
+        }
+
+        private IEnumerator EndOfGameRoutine(int stars, float time)
+        {
+            m_PauseButton.gameObject.SetActive(false);
+            m_Time.gameObject.SetActive(false);
+            m_Speedometer.gameObject.SetActive(false);
+
+            int minutes = (int)Mathf.Floor(time / 60f);
+            int seconds = (int)Mathf.Floor(time % 60f);
+            int milliseconds = (int)Mathf.Floor((time % 1.0f) * 1000.0f);
+
+            m_TimeInfo.text = String.Format("Your time: {0}' {1:00}\" {2:000}\nYour best time: {3}' {4:00}\" {5:000}", 
+                                    minutes, seconds, milliseconds,
+                                    minutes, seconds, milliseconds);
+
+            m_PauseScreenPanel.SetActive(false);
+            m_EndGamePanel.SetActive(true);
+            m_EndGamePanel.transform.localScale = Vector3.zero;
+
+            m_EndGamePanel.transform.DOScale(Vector3.one, .6f).SetUpdate(true);
+
+            yield return new WaitForSecondsRealtime(.6f);
+
+            for (int i = 0; i < stars; i++)
+            {
+                var targetColor = m_Stars[i].color;
+                targetColor.a = 1.0f;
+                m_Stars[i].DOColor(targetColor, .8f).SetUpdate(true);
+                m_Stars[i].transform.DOPunchScale(Vector3.one * 1.2f, .2f).SetDelay(.2f).SetUpdate(true);
+
+                yield return new WaitForSecondsRealtime(.8f);
+            }
         }
     }
 }
