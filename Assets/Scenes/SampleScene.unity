@@ -4666,6 +4666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b412ba35b3edc4a44832056a4b15cac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Marker: {fileID: 1807323960}
   m_Pointer: {fileID: 1389842223}
 --- !u!225 &1807323963
 CanvasGroup:
@@ -5214,7 +5215,7 @@ PrefabInstance:
     - target: {fileID: 1087187306071366164, guid: 1a1552f9338e03d4e94534746c966970,
         type: 3}
       propertyPath: m_BoostSpeed
-      value: 30
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a1552f9338e03d4e94534746c966970, type: 3}

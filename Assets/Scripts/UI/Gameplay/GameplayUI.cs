@@ -63,10 +63,13 @@ namespace Game.UI
             if (m_Boosts.Count == 0) return;
 
             var b = m_Boosts[m_Boosts.Count - 1];
+            b.DOColor(Color.red, 1.0f);
             b.transform.DOPunchScale(Vector3.one * 1.3f, 0.6f).SetUpdate(true).OnComplete(() => {
                 m_Boosts.Remove(b);
                 Destroy(b.gameObject);
             });
+
+            m_Speedometer.BoostFor(5.0f);
         }
 
         public void SetTime(float time)
