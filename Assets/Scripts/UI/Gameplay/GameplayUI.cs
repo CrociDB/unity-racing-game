@@ -15,6 +15,7 @@ namespace Game.UI
         [Header("Panels")]
         public GameObject m_PauseScreenPanel;
         public GameObject m_EndGamePanel;
+        public GameObject m_GameOver;
 
         [Header("HUD")]
         public Text m_Countdown;
@@ -160,6 +161,19 @@ namespace Game.UI
 
                 yield return new WaitForSecondsRealtime(.8f);
             }
+        }
+
+        public void GameOver()
+        {
+            m_PauseButton.gameObject.SetActive(false);
+            m_Time.gameObject.SetActive(false);
+            m_Speedometer.gameObject.SetActive(false);
+
+            m_PauseScreenPanel.SetActive(false);
+            m_GameOver.SetActive(true);
+            m_GameOver.transform.localScale = Vector3.zero;
+
+            m_GameOver.transform.DOScale(Vector3.one, .4f).SetUpdate(true);
         }
     }
 }

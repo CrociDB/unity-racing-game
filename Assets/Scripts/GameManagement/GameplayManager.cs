@@ -55,7 +55,7 @@ namespace Game.GameManagement
             if (m_GameRunning) 
             {
                 m_Time += Time.deltaTime;
-                if (m_Time >= GameManager.Instance.Currentlevel.m_TimeLimit)
+                if (m_Time >= GameManager.Instance.Currentlevel.m_TimeLimit || m_PlayerMovement.transform.position.y < -1f)
                 {
                     GameOver();
                 }
@@ -74,14 +74,8 @@ namespace Game.GameManagement
 
         private void GameOver()
         {
-            StartCoroutine(GameOverRoutine());
-            Debug.Log("You lost!");
-        }
-
-        private IEnumerator GameOverRoutine()
-        {
             PauseGame();
-            yield return null;
+            m_GameplayUI.GameOver();
         }
 
         public void PlayerTouchedCheckpoint()
