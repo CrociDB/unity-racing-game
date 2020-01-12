@@ -39,6 +39,8 @@ namespace Game.Map
 
                 m_Checkpoints.Add(checkpoint);
             }
+
+            m_Checkpoints[0].SetFinalCheckpoint();
         }
 
         private void PlayerTouchedCheckpoint(Checkpoint checkpoint)

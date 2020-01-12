@@ -8,10 +8,11 @@ namespace Game.Map
     public class Checkpoint : MonoBehaviour
     {
         public Action<Checkpoint> OnPlayerTouched;
+        public Material m_FinalCheckpointMaterial;
 
-        private void Update() 
+        public void SetFinalCheckpoint()
         {
-            
+            GetComponent<MeshRenderer>().material = m_FinalCheckpointMaterial;
         }
 
         private void OnTriggerEnter(Collider other) 
