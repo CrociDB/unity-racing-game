@@ -15,6 +15,6 @@ MonoBehaviour:
   m_Title: Oval
   m_Difficulty: 0
   m_Scene: SampleScene
-  m_Boosts: 2
+  m_Boosts: 3
   m_TimeLimit: 40
-  m_TimeByStar: {x: 24, y: 30}
+  m_TimeByStar: {x: 25, y: 28}

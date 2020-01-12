@@ -113,7 +113,7 @@ namespace Game.GameManagement
         {
             m_GameplayUI.FlashScreen();
             m_Camera.QuickBoost();
-            
+
             if (++m_TouchedCheckpoints >= m_MapController.CheckpointTotal)
             {
                 EndOfLevel();
@@ -128,7 +128,7 @@ namespace Game.GameManagement
         private IEnumerator EndOfLevelRoutine()
         {
             m_GameRunning = false;
-            yield return new WaitForSecondsRealtime(.3f);
+            yield return new WaitForSecondsRealtime(.6f);
             PauseGame();
 
             var stars = GetRaceStars();
