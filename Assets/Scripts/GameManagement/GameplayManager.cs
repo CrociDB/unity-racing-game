@@ -55,10 +55,18 @@ namespace Game.GameManagement
             if (m_GameRunning) 
             {
                 m_Time += Time.deltaTime;
-                if (m_Time >= GameManager.Instance.Currentlevel.m_TimeLimit || m_PlayerMovement.transform.position.y < -1f)
+                if (m_Time >= GameManager.Instance.Currentlevel.m_TimeLimit)
                 {
                     GameOver();
                 }
+
+                RaycastHit playerHit;
+                if (!Physics.Raycast(m_PlayerMovement.transform.position, -Vector3.up, out playerHit, Mathf.Infinity, 1) &&
+                    m_PlayerMovement.transform.position.y <= -1.0f)
+                {
+                    GameOver();
+                }
+                
             }
         }
 
