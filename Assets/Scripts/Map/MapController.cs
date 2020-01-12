@@ -12,8 +12,17 @@ namespace Game.Map
         public Checkpoint m_CheckpointPrefab;
 
         private List<Checkpoint> m_Checkpoints;
+        private int m_TotalCheckpoints;
         private GameplayManager m_Gameplay;
         private CircuitGenerator m_Circuit;
+
+        public int CheckpointTotal
+        {
+            get
+            {
+                return m_TotalCheckpoints;
+            }
+        }
 
         public void Init(GameplayManager gameplay)
         {
@@ -41,6 +50,7 @@ namespace Game.Map
             }
 
             m_Checkpoints[0].SetFinalCheckpoint();
+            m_TotalCheckpoints = m_Checkpoints.Count;
         }
 
         private void PlayerTouchedCheckpoint(Checkpoint checkpoint)

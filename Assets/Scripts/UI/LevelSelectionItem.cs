@@ -21,8 +21,8 @@ namespace Game.UI
         {
             m_LevelDescriptor = levelDescriptor;
 
-            m_Title.text = m_LevelDescriptor.m_Name;
-            m_Difficulty.text = m_LevelDescriptor.m_Name;
+            m_Title.text = m_LevelDescriptor.m_Title;
+            m_Difficulty.text = m_LevelDescriptor.m_Title;
             m_UserStars.text = "Stars";
             m_UserTime.text = "UserTime";
 

@@ -111,8 +111,8 @@ namespace Game.UI
             color.a = 0.0f;
             var target = color;
             target.a = 0.8f;
-            m_FlashFX.DOColor(target, .07f);
-            m_FlashFX.DOColor(color, .3f).SetDelay(.075f);
+            m_FlashFX.DOColor(target, .07f).SetUpdate(true);
+            m_FlashFX.DOColor(color, .3f).SetDelay(.075f).SetUpdate(true);
         }
     }
 }

@@ -13,12 +13,13 @@ public class LevelDescriptor : ScriptableObject
     };
 
     [Header("Description")]
-    public string m_Name;
+    public string m_Title;
     public Difficulty m_Difficulty;
 
     [Header("Internal")]
     public string m_Scene;
 
     [Header("Gameplay Parameters")]
-    public float[] m_TimeByStar;
+    public float m_TimeLimit;
+    public Vector2 m_TimeByStar;
 }

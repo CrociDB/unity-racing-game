@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5411e5a344a4dd6438abe5c05b194f41, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  m_Name: Two
+  m_Title: Crazy
   m_Difficulty: 1
   m_Scene: SampleScene
-  m_TimeByStar:
-  - 4
-  - 10
-  - 20
+  m_TimeLimit: 0
+  m_TimeByStar: {x: 0, y: 0}

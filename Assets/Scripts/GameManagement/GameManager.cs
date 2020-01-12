@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,6 +36,12 @@ namespace Game.GameManagement
         {
             get
             {
+                if (m_CurrentLevel == null)
+                {
+                    var scene = SceneManager.GetActiveScene().name;
+                    m_CurrentLevel = m_GameDescriptor.m_Levels.Where(l => l.m_Scene == scene).First();
+                }
+
                 return m_CurrentLevel;
             }
         }
