@@ -58,7 +58,7 @@ namespace Game.UI
             Destroy(m_BoostBase.gameObject);
         }
 
-        public void BurnBoost()
+        public void BurnBoost(float time)
         {
             if (m_Boosts.Count == 0) return;
 
@@ -69,7 +69,7 @@ namespace Game.UI
                 Destroy(b.gameObject);
             });
 
-            m_Speedometer.BoostFor(5.0f);
+            m_Speedometer.BoostFor(time);
         }
 
         public void SetTime(float time)

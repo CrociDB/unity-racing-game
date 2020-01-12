@@ -6,6 +6,7 @@ using Game.Map;
 using Game.Player;
 using Game.UI;
 using System;
+using Game.Camera;
 
 namespace Game.GameManagement
 {
@@ -13,6 +14,7 @@ namespace Game.GameManagement
     {
         public MapController m_MapController;
         public PlayerMovement m_PlayerMovement;
+        public CameraFollower m_Camera;
         public GameplayUI m_GameplayUI;
 
         private bool m_GameRunning;
@@ -85,10 +87,10 @@ namespace Game.GameManagement
 
         private void Boost()
         {
-            Debug.Log("BOOST!");
             m_BoostCooldown = 5.5f;
+            m_Camera.BoostCamera(m_BoostCooldown);
+            m_GameplayUI.BurnBoost(m_BoostCooldown);
             m_PlayerMovement.Boost();
-            m_GameplayUI.BurnBoost();
         }
 
         public void PauseGame()
@@ -110,6 +112,8 @@ namespace Game.GameManagement
         public void PlayerTouchedCheckpoint()
         {
             m_GameplayUI.FlashScreen();
+            m_Camera.QuickBoost();
+            
             if (++m_TouchedCheckpoints >= m_MapController.CheckpointTotal)
             {
                 EndOfLevel();
