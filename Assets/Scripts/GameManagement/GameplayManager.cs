@@ -137,8 +137,8 @@ namespace Game.GameManagement
             if (userData == null || (userData != null && userData.m_Time > m_Time))
             {
                 GameManager.Instance.UserData.SetUserLevelData(
-                    GameManager.Instance.Currentlevel.name, 
                     new UserData.UserLevelData() {
+                        m_Name = GameManager.Instance.Currentlevel.name,
                         m_Stars = stars, 
                         m_Time = m_Time });
                 GameManager.Instance.SaveUserData();

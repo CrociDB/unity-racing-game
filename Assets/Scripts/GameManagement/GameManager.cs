@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Game.GameManagement
 {
@@ -76,11 +77,20 @@ namespace Game.GameManagement
         private void LoadUserData()
         {
             m_UserData = new UserData();
+
+            var serialized = PlayerPrefs.GetString("user_data", "");
+            if (!String.IsNullOrEmpty(serialized))
+            {
+                m_UserData = JsonUtility.FromJson<UserData>(serialized);
+            }
         }
 
         public void SaveUserData()
         {
-            // Saving...
+            if (m_UserData == null) return;
+
+            var serialize = JsonUtility.ToJson(m_UserData);
+            PlayerPrefs.SetString("user_data", serialize);
         }
 
         public void LoadLevel(LevelDescriptor level)
