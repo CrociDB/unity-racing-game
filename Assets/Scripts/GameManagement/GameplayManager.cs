@@ -26,7 +26,9 @@ namespace Game.GameManagement
         {
             m_Time = 0.0f;
 
+            m_MapController.Init(this);
             m_GameplayUI.Init(this);
+
             StartCoroutine(CountdownRoutine());
         }
 
@@ -57,6 +59,10 @@ namespace Game.GameManagement
         {
             GameManager.Instance.UnpauseGame();
         }
-        
+
+        public void PlayerTouchedCheckpoint()
+        {
+            m_GameplayUI.FlashScreen();
+        }
     }
 }

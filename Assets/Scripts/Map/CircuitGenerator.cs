@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,11 +12,41 @@ namespace Game.Map
 {
     public class CircuitGenerator : MonoBehaviour
     {
-    #if UNITY_EDITOR
         [Range(1, 200)]
         public int m_SplineResolution = 1;
         public float m_Width = 12f;
         public float m_Height = 20f;
+
+        public IEnumerable<Tuple<Vector3, Vector3>> GetCheckpoints()
+        {
+            var points = transform.Cast<Transform>().Select(t => t.position).ToList();
+
+            var lastLastPoint = points[points.Count - 2];
+            var lastPoint = points[points.Count - 1];
+            var currentPoint = points[0];
+            var nextPoint = points[1 % points.Count];
+
+            for (int j = 0; j < points.Count; j++)
+            {
+                currentPoint = points[j];
+                nextPoint = points[(j + 1) % points.Count];
+
+                var lastPos = GetCatmullRomPosition(1.0f / (float)m_SplineResolution * (float)(m_SplineResolution - 2),
+                        lastLastPoint,
+                        lastPoint,
+                        currentPoint,
+                        nextPoint);
+                
+                var normal = (currentPoint - lastPos).normalized;
+
+                yield return new Tuple<Vector3, Vector3>(currentPoint, normal);
+
+                lastPoint = currentPoint;
+                lastLastPoint = lastPoint;
+            }
+        }
+
+    #if UNITY_EDITOR
         private MeshFilter m_CircuitMesh;
         
         public void Generate()

@@ -17,6 +17,8 @@ namespace Game.UI
         public Text m_Time;
         public Speedometer m_Speedometer;
         public Button m_PauseButton;
+
+        public Image m_FlashFX;
         
         private GameplayManager m_Gameplay;
 
@@ -99,6 +101,18 @@ namespace Game.UI
         {
             GameManager.Instance.RestartLevel();
             m_Gameplay.UnpauseGame();
+        }
+
+        public void FlashScreen()
+        {
+            DOTween.Kill(m_FlashFX);
+
+            var color = m_FlashFX.color;
+            color.a = 0.0f;
+            var target = color;
+            target.a = 0.8f;
+            m_FlashFX.DOColor(target, .07f);
+            m_FlashFX.DOColor(color, .3f).SetDelay(.075f);
         }
     }
 }
