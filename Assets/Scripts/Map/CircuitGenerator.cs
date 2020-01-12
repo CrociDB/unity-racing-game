@@ -19,7 +19,8 @@ namespace Game.Map
 
         public IEnumerable<Tuple<Vector3, Vector3>> GetCheckpoints()
         {
-            var points = transform.Cast<Transform>().Select(t => t.position).ToList();
+            var points = new List<Vector3>();
+            foreach (Transform t in transform) points.Add(t.position);
 
             var lastLastPoint = points[points.Count - 2];
             var lastPoint = points[points.Count - 1];
@@ -44,6 +45,18 @@ namespace Game.Map
                 lastPoint = currentPoint;
                 lastLastPoint = lastPoint;
             }
+        }
+
+        Vector3 GetCatmullRomPosition(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+        {
+            Vector3 a = 2f * p1;
+            Vector3 b = p2 - p0;
+            Vector3 c = 2f * p0 - 5f * p1 + 4f * p2 - p3;
+            Vector3 d = -p0 + 3f * p1 - 3f * p2 + p3;
+
+            Vector3 pos = 0.5f * (a + (b * t) + (c * t * t) + (d * t * t * t));
+
+            return pos;
         }
 
     #if UNITY_EDITOR
@@ -188,18 +201,6 @@ namespace Game.Map
             mesh.RecalculateNormals();
 
             return mesh;
-        }
-
-        Vector3 GetCatmullRomPosition(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
-        {
-            Vector3 a = 2f * p1;
-            Vector3 b = p2 - p0;
-            Vector3 c = 2f * p0 - 5f * p1 + 4f * p2 - p3;
-            Vector3 d = -p0 + 3f * p1 - 3f * p2 + p3;
-
-            Vector3 pos = 0.5f * (a + (b * t) + (c * t * t) + (d * t * t * t));
-
-            return pos;
         }
 
         void OnDrawGizmos()
