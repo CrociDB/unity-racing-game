@@ -14,6 +14,14 @@ namespace Game.Player
 
         public ParticleSystem[] m_TireMarks;
 
+        public float SpeedNormalized
+        {
+            get
+            {
+                return Mathf.Clamp01(m_Body.velocity.sqrMagnitude / (m_MaxSpeed * m_MaxSpeed));
+            }
+        }
+
         private void Start() 
         {
             m_Body = GetComponent<Rigidbody>();    
