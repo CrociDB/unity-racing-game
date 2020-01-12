@@ -19,7 +19,7 @@ namespace Game.GameManagement
 
         private void Start() 
         {
-            Init();    
+            Init();
         }
 
         public void Init()
@@ -27,6 +27,15 @@ namespace Game.GameManagement
             m_Time = 0.0f;
 
             m_GameplayUI.Init(this);
+            StartCoroutine(CountdownRoutine());
+        }
+
+        private IEnumerator CountdownRoutine()
+        {
+            PauseGame();
+            m_GameplayUI.StartCountdown();
+            yield return new WaitForSecondsRealtime(4.0f);
+            UnpauseGame();
         }
 
         private void Update() 
