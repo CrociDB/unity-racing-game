@@ -39,9 +39,6 @@ namespace Game.Player
             m_Boost *= 0.99f;
             var maxSpeed = m_MaxSpeed + m_Boost;
             var thrust = m_Thrust + m_Boost * 0.5f;
-            
-            if (m_Boost >= 0.1f)
-                Debug.Log("Added boost. Total speed: " + maxSpeed);
 
             m_Body.AddForce(transform.forward * thrust * Time.deltaTime * 60f, ForceMode.Acceleration);
 

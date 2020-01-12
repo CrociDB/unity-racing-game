@@ -17,8 +17,10 @@ namespace Game.GameManagement
 
         private bool m_GameRunning;
         private float m_Time;
-        private int m_Boosts;
         private int m_TouchedCheckpoints;
+
+        private int m_Boosts;
+        private float m_BoostCooldown = -1.0f;
 
         private void Start() 
         {
@@ -65,12 +67,13 @@ namespace Game.GameManagement
 
                 RaycastHit playerHit;
                 if (!Physics.Raycast(m_PlayerMovement.transform.position, -Vector3.up, out playerHit, Mathf.Infinity, 1) &&
-                    m_PlayerMovement.transform.position.y <= -1.0f)
+                    m_PlayerMovement.transform.position.y <= -3.0f)
                 {
                     GameOver();
                 }
 
-                if (Input.GetButtonDown("Fire1"))
+                m_BoostCooldown -= Time.deltaTime;
+                if (Input.GetButtonDown("Fire1") && m_BoostCooldown < 0.0f)
                 {
                     if (++m_Boosts <= GameManager.Instance.Currentlevel.m_Boosts)
                     {
@@ -82,6 +85,8 @@ namespace Game.GameManagement
 
         private void Boost()
         {
+            Debug.Log("BOOST!");
+            m_BoostCooldown = 5.5f;
             m_PlayerMovement.Boost();
             m_GameplayUI.BurnBoost();
         }

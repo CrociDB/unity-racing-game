@@ -34,7 +34,7 @@ namespace Game.UI
             m_Pointer.gameObject.SetActive(false);
             m_Marker.DOColor(Color.red, .2f).OnComplete(() => {
                 m_Marker.DOColor(color, time).OnComplete(() => m_Pointer.gameObject.SetActive(true));
-                m_Marker.transform.DOShakePosition(time, 1.5f, 10, 90);
+                m_Marker.transform.DOShakePosition(time, 15.5f, 20, 90);
             });
         }
     }
