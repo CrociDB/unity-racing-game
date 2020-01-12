@@ -20,6 +20,7 @@ public class LevelDescriptor : ScriptableObject
     public string m_Scene;
 
     [Header("Gameplay Parameters")]
+    public int m_Boosts;
     public float m_TimeLimit;
     public Vector2 m_TimeByStar;
 }

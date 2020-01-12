@@ -13,6 +13,7 @@ namespace Game.UI
     public class GameplayUI : MonoBehaviour
     {
         [Header("Panels")]
+        public GameObject m_BoostPanel;
         public GameObject m_PauseScreenPanel;
         public GameObject m_EndGamePanel;
         public GameObject m_GameOver;
@@ -23,10 +24,13 @@ namespace Game.UI
         public Speedometer m_Speedometer;
         public Button m_PauseButton;
         public Image m_FlashFX;
+        public Image m_BoostBase;
 
         [Header("End Game Panel")]
         public Image[] m_Stars;
         public Text m_TimeInfo;
+
+        private List<Image> m_Boosts;
 
         private GameplayManager m_Gameplay;
 
@@ -38,6 +42,31 @@ namespace Game.UI
         public void SetSpeedNormalized(float speed)
         {
             m_Speedometer.SetSpeedNormalized(speed);
+        }
+
+        public void SetBoosts(int boosts)
+        {
+            m_Boosts = new List<Image>();
+            for (int i = 0; i < boosts; i++)
+            {
+                var b = Instantiate(m_BoostBase);
+                b.transform.SetParent(m_BoostBase.transform.parent);
+                b.transform.localScale = Vector3.one;
+                m_Boosts.Add(b);
+            }
+
+            Destroy(m_BoostBase.gameObject);
+        }
+
+        public void BurnBoost()
+        {
+            if (m_Boosts.Count == 0) return;
+
+            var b = m_Boosts[m_Boosts.Count - 1];
+            b.transform.DOPunchScale(Vector3.one * 1.3f, 0.6f).SetUpdate(true).OnComplete(() => {
+                m_Boosts.Remove(b);
+                Destroy(b.gameObject);
+            });
         }
 
         public void SetTime(float time)
@@ -56,6 +85,7 @@ namespace Game.UI
         private IEnumerator CountdownRoutine()
         {
             m_PauseButton.gameObject.SetActive(false);
+            m_BoostPanel.gameObject.SetActive(false);
             m_Time.gameObject.SetActive(false);
             m_Speedometer.gameObject.SetActive(false);
             m_Countdown.gameObject.SetActive(true);
@@ -74,6 +104,7 @@ namespace Game.UI
             yield return new WaitForSecondsRealtime(1.0f);
 
             m_PauseButton.gameObject.SetActive(true);
+            m_BoostPanel.gameObject.SetActive(true);
             m_Countdown.gameObject.SetActive(false);
             m_Time.gameObject.SetActive(true);
             m_Speedometer.gameObject.SetActive(true);
@@ -82,6 +113,7 @@ namespace Game.UI
         public void Pause()
         {
             m_PauseButton.gameObject.SetActive(false);
+            m_BoostPanel.gameObject.SetActive(false);
             m_Time.gameObject.SetActive(false);
             m_Speedometer.gameObject.SetActive(false);
 
@@ -102,6 +134,7 @@ namespace Game.UI
             m_PauseButton.gameObject.SetActive(true);
             m_Time.gameObject.SetActive(true);
             m_Speedometer.gameObject.SetActive(true);
+            m_BoostPanel.gameObject.SetActive(true);
 
             m_PauseScreenPanel.SetActive(false);
             m_Gameplay.UnpauseGame();
@@ -133,6 +166,7 @@ namespace Game.UI
         private IEnumerator EndOfGameRoutine(int stars, float time)
         {
             m_PauseButton.gameObject.SetActive(false);
+            m_BoostPanel.gameObject.SetActive(false);
             m_Time.gameObject.SetActive(false);
             m_Speedometer.gameObject.SetActive(false);
 
@@ -166,6 +200,7 @@ namespace Game.UI
         public void GameOver()
         {
             m_PauseButton.gameObject.SetActive(false);
+            m_BoostPanel.gameObject.SetActive(false);
             m_Time.gameObject.SetActive(false);
             m_Speedometer.gameObject.SetActive(false);
 

@@ -15,5 +15,6 @@ MonoBehaviour:
   m_Title: Oh Wow
   m_Difficulty: 2
   m_Scene: SampleScene
+  m_Boosts: 4
   m_TimeLimit: 0
   m_TimeByStar: {x: 0, y: 0}

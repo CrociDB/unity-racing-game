@@ -15,5 +15,6 @@ MonoBehaviour:
   m_Title: Crazy
   m_Difficulty: 1
   m_Scene: SampleScene
+  m_Boosts: 3
   m_TimeLimit: 0
   m_TimeByStar: {x: 0, y: 0}

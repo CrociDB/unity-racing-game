@@ -17,6 +17,7 @@ namespace Game.GameManagement
 
         private bool m_GameRunning;
         private float m_Time;
+        private int m_Boosts;
         private int m_TouchedCheckpoints;
 
         private void Start() 
@@ -27,11 +28,13 @@ namespace Game.GameManagement
         public void Init()
         {
             m_Time = 0.0f;
+            m_Boosts = 0;
             m_TouchedCheckpoints = 0;
             m_GameRunning = false;
 
             m_MapController.Init(this);
             m_GameplayUI.Init(this);
+            m_GameplayUI.SetBoosts(GameManager.Instance.Currentlevel.m_Boosts);
 
             StartCoroutine(CountdownRoutine());
         }
@@ -66,8 +69,21 @@ namespace Game.GameManagement
                 {
                     GameOver();
                 }
-                
+
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    if (++m_Boosts <= GameManager.Instance.Currentlevel.m_Boosts)
+                    {
+                        Boost();
+                    }
+                }
             }
+        }
+
+        private void Boost()
+        {
+            m_PlayerMovement.Boost();
+            m_GameplayUI.BurnBoost();
         }
 
         public void PauseGame()
