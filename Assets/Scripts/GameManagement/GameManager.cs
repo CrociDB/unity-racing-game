@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Game.GameManagement
 {
@@ -30,6 +31,7 @@ namespace Game.GameManagement
         private float m_FixedDeltaTime;
         private bool m_Paused;
 
+        private UserData m_UserData;
         private LevelDescriptor m_CurrentLevel;
 
         public LevelDescriptor Currentlevel
@@ -46,6 +48,14 @@ namespace Game.GameManagement
             }
         }
 
+        public UserData UserData
+        {
+            get
+            {
+                return m_UserData;
+            }
+        }
+
         public bool Paused
         {
             get
@@ -59,6 +69,18 @@ namespace Game.GameManagement
             DontDestroyOnLoad(gameObject);
             m_FixedDeltaTime = Time.fixedDeltaTime;
             m_GameDescriptor = Resources.Load<GameDescriptor>("Descriptors/GameDescriptor");
+
+            LoadUserData();
+        }
+
+        private void LoadUserData()
+        {
+            m_UserData = new UserData();
+        }
+
+        public void SaveUserData()
+        {
+            // Saving...
         }
 
         public void LoadLevel(LevelDescriptor level)

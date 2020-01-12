@@ -177,9 +177,23 @@ namespace Game.UI
             int seconds = (int)Mathf.Floor(time % 60f);
             int milliseconds = (int)Mathf.Floor((time % 1.0f) * 1000.0f);
 
-            m_TimeInfo.text = String.Format("Your time: {0}' {1:00}\" {2:000}\nYour best time: {3}' {4:00}\" {5:000}", 
-                                    minutes, seconds, milliseconds,
-                                    minutes, seconds, milliseconds);
+            var userData = GameManager.Instance.UserData.GetUserLevelData(GameManager.Instance.Currentlevel.name);
+            if (userData != null)
+            {
+                int bminutes = (int)Mathf.Floor(userData.m_Time / 60f);
+                int bseconds = (int)Mathf.Floor(userData.m_Time % 60f);
+                int bmilliseconds = (int)Mathf.Floor((time % 1.0f) * 1000.0f);
+
+                m_TimeInfo.text = String.Format("Your time: {0}' {1:00}\" {2:000}\nYour best time: {3}' {4:00}\" {5:000}", 
+                                        minutes, seconds, milliseconds,
+                                        bminutes, bseconds, bmilliseconds);
+            }
+            else
+            {
+                m_TimeInfo.text = String.Format("Your time: {0}' {1:00}\" {2:000}\nYour best time: {3}' {4:00}\" {5:000}", 
+                                        minutes, seconds, milliseconds,
+                                        minutes, seconds, milliseconds);
+            }
 
             m_PauseScreenPanel.SetActive(false);
             m_EndGamePanel.SetActive(true);

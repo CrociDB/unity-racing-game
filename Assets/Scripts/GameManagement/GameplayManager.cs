@@ -133,6 +133,17 @@ namespace Game.GameManagement
 
             var stars = GetRaceStars();
 
+            var userData = GameManager.Instance.UserData.GetUserLevelData(GameManager.Instance.Currentlevel.name);
+            if (userData == null || (userData != null && userData.m_Time > m_Time))
+            {
+                GameManager.Instance.UserData.SetUserLevelData(
+                    GameManager.Instance.Currentlevel.name, 
+                    new UserData.UserLevelData() {
+                        m_Stars = stars, 
+                        m_Time = m_Time });
+                GameManager.Instance.SaveUserData();
+            }
+
             m_GameplayUI.EndOfGame(stars, m_Time);
         }
 
