@@ -12,6 +12,8 @@ namespace Game.Player
         public float m_Thrust = 1.0f;
         public float m_RotationSpeed = 4.0f;
 
+        public ParticleSystem[] m_TireMarks;
+
         private void Start() 
         {
             m_Body = GetComponent<Rigidbody>();    
@@ -25,6 +27,12 @@ namespace Game.Player
             var speedNormalized = Mathf.Clamp(velocity.sqrMagnitude / (m_MaxSpeed * m_MaxSpeed), 0.2f, 1.0f);
 
             var turning = Input.GetAxis("Horizontal") * speedNormalized;
+
+            foreach(var tm in m_TireMarks)
+            {
+                var diff = 1.0f - Vector3.Dot(velocity.normalized, transform.forward);
+                tm.Emit((int)(Mathf.Min(Mathf.Abs(diff) * 8.0f, 8.0f)));
+            }
 
             transform.Rotate(transform.up * turning * m_RotationSpeed);
             m_Body.AddForce(-velocity * Mathf.Abs(turning), ForceMode.Acceleration);
